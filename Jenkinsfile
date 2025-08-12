@@ -30,7 +30,7 @@ pipeline {
                 mvn sonar:sonar \
                   -Dsonar.projectKey=springboot-demo \
                   -Dsonar.host.url=https://d6312cd2eccd.ngrok-free.app \
-                  -Dsonar.login=$sonarqube_token
+                  -Dsonar.login=$SONARQUBE_TOKEN
                 '''
             }
         }
