@@ -1,16 +1,19 @@
 pipeline {
     agent any
+    triggers {
+        githubPush()
+    }
     tools{
         maven 'maven'
     }
     environment {
-        SONARQUBE_URL = 'https://d6312cd2eccd.ngrok-free.app/projects'
-        SONARQUBE_TOKEN = credentials ('sonarqube_token')
+        SONARQUBE_URL = 'http://44.202.10.13:9000/'
+        SONARQUBE_TOKEN = credentials ('sonar-token')
     }
     stages {
         stage('Checkout'){
             steps{
-                git branch: 'main', credentialsId: 'git_spring_token', url: 'https://github.com/Brahmamk3/sprintboot.git'
+                git branch: 'main', credentialsId: 'git-token', url: 'https://github.com/Brahmamk3/sprintboot.git'
                 sh 'ls -la'
             }
         }
@@ -27,10 +30,17 @@ pipeline {
         stage('SonarQube Analysis'){
             steps{
                 sh '''
-                mvn sonar:sonar \
-                  -Dsonar.projectKey=springboot-demo \
-                  -Dsonar.host.url=https://d6312cd2eccd.ngrok-free.app \
+                mvn sonar:sonar /
+                  -Dsonar.projectKey=springboot-demo /
+                  -Dsonar.host.url=http://44.202.10.13:9000/
                   -Dsonar.login=$SONARQUBE_TOKEN
+                '''
+            }
+        }
+        stage('Deploy'){
+            steps{
+                sh '''
+                nohup java -jar target/simple-veera-hello -1.0.0.jar --server.port=9000 > app.log 2>&1 &
                 '''
             }
         }
