@@ -1,4 +1,4 @@
-pipeline {
+spipeline {
     agent any
     triggers {
         githubPush()
@@ -7,7 +7,7 @@ pipeline {
         maven 'maven'
     }
     environment {
-        SONARQUBE_URL = 'http://44.202.10.13:9000/'
+        SONARQUBE_URL = 'http://44.202.10.13:9000/projects'
         SONARQUBE_TOKEN = credentials ('sonar-token')
     }
     stages {
@@ -30,9 +30,9 @@ pipeline {
         stage('SonarQube Analysis'){
             steps{
                 sh '''
-                mvn sonar:sonar /
-                  -Dsonar.projectKey=springboot-demo /
-                  -Dsonar.host.url=http://44.202.10.13:9000/
+                mvn sonar:sonar \
+                  -Dsonar.projectKey=springboot-demo \
+                  -Dsonar.host.url=http://44.202.10.13:9000 \
                   -Dsonar.login=$SONARQUBE_TOKEN
                 '''
             }
