@@ -10,14 +10,14 @@ pipeline {
     }
 
     environment {
-        SONARQUBE_URL = 'http://44.202.10.13:9000'
-        SONARQUBE_TOKEN = credentials('sonar-token')
+        SONARQUBE_URL = 'http://13.42.48.187:9000/'
+        SONARQUBE_TOKEN = credentials('sonarqube')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'git-token', url: 'https://github.com/Brahmamk3/sprintboot.git'
+                git branch: 'main', url: 'https://github.com/Brahmamk3/sprintboot.git'
                 sh 'ls -la'
             }
         }
