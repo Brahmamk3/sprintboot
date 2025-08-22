@@ -7,11 +7,7 @@ pipeline {
 
     tools {
         maven 'maven'
-    }
-
-    environment {
-        SONARQUBE_URL = 'http://13.42.48.187:9000/'
-        SONARQUBE_TOKEN = credentials('sonarqube')
+        docker 'docker-veera'
     }
 
     stages {
@@ -33,24 +29,21 @@ pipeline {
                 sh 'mvn package'
             }
         }
-
-        stage('SonarQube Analysis') {
+        stage ('build by docker') {
             steps {
-                sh """
-                mvn sonar:sonar \
-                  -Dsonar.projectKey=springboot-demo \
-                  -Dsonar.host.url=$SONARQUBE_URL \
-                  -Dsonar.login=$SONARQUBE_TOKEN
-                """
+                sh 'docker build -t brahmamk015/simple-hello-veera:1.0.0 .'
             }
         }
-
-        stage('Deploy') {
+        stage ('deploy or run') {
             steps {
-                sh """
-                nohup java -jar target/simple-veera-hello-1.0.0.jar --server.port=9000 > app.log 2>&1 &
-                """
+                sh 'docker run -d -p 8080:8080 --name springboot-app brahmamk015/simple-hello-springboot:1.0.0'
             }
         }
+        
+        stage('push to docker') {
+            steps {
+                sh 'docker push brahmamk015/simple-hello-springboot:1.0.0'
+            }
+        }  
     }
 }
