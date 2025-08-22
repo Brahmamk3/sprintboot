@@ -28,21 +28,23 @@ pipeline {
                 sh 'mvn package'
             }
         }
-        stage ('build by docker') {
-            steps {
-                sh 'docker build -t brahmamk015/simple-hello-veera:1.0.0 .'
-            }
-        }
-        stage ('deploy or run') {
-            steps {
-                sh 'docker run -d -p 8080:8080 --name springboot-app brahmamk015/simple-hello-springboot:1.0.0'
-            }
-        }
-        
-        stage('push to docker') {
-            steps {
-                sh 'docker push brahmamk015/simple-hello-springboot:1.0.0'
-            }
-        }  
+stage('Build Docker Image') {
+    steps {
+        sh 'docker build -t brahmamk015/simple-hello-springboot:1.0.0 .'
+    }
+}
+
+stage('Push Docker Image') {
+    steps {
+        sh 'docker push brahmamk015/simple-hello-springboot:1.0.0'
+    }
+}
+
+stage('Deploy or Run') {
+    steps {
+        sh 'docker run -d -p 8080:8080 --name springboot-app brahmamk015/simple-hello-springboot:1.0.0'
+    }
+}
+ 
     }
 }
