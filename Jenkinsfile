@@ -28,12 +28,11 @@ pipeline {
                 sh 'mvn package'
             }
         }
-
         stage('Deploy') {
-            steps {
-                sh 'ansible-playbook -i inventory.ini deploy.yml'
-            }
+        steps {
+            sh 'ansible-playbook -i /var/lib/jenkins/ansible-lab/inventory.ini /var/lib/jenkins/ansible-lab/deploy.yml'
         }
+}
 
     }
 }
